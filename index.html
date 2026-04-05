@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KaffineBreak — with Backend Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FDF6EE;--cream2:#F5E9D6;
+  --brown:#5C3A1E;--brown3:#704A27;
+  --caramel:#C07D40;--caramel2:#E8AA68;
+  --rose:#D4857A;--sage:#7A9E7E;
+  --ink:#2E1A0E;--muted:#7A5C44;--white:#FFFDF9;
+  --shadow:rgba(92,58,30,0.12);
+  --t-bg:#0D1117;--t-bg2:#161B22;--t-border:#30363D;
+  --t-green:#3FB950;--t-blue:#58A6FF;--t-yellow:#E3B341;
+  --t-red:#F85149;--t-purple:#BC8CFF;--t-cyan:#39D2CF;
+  --t-gray:#8B949E;--t-white:#E6EDF3;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);display:flex;flex-direction:column}
+
+.shell{display:flex;flex-direction:column;height:100vh}
+.top-area{display:grid;grid-template-columns:1fr 360px;flex:1;min-height:0;overflow:hidden}
+.main{overflow-y:auto;display:flex;flex-direction:column}
+.sidebar{background:var(--brown);display:flex;flex-direction:column;overflow-y:auto}
+
+/* TOPBAR */
+.topbar{background:rgba(253,246,238,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(92,58,30,0.1);padding:.8rem 1.75rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
+.logo{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--brown)}
+.logo em{color:var(--caramel);font-style:italic}
+.tab-btns{display:flex;background:var(--cream2);border-radius:100px;padding:3px;gap:2px}
+.tab-btn{padding:.35rem .9rem;border-radius:100px;border:none;background:transparent;font-size:.78rem;font-weight:500;cursor:pointer;color:var(--muted);transition:all .2s}
+.tab-btn.active{background:var(--brown);color:var(--cream)}
+
+/* HERO */
+.hero-strip{background:var(--brown);padding:1.5rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0}
+.hero-strip h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--cream);line-height:1.2}
+.hero-strip h1 em{color:var(--caramel2);font-style:italic}
+.hero-strip p{color:rgba(253,246,238,0.55);font-size:.8rem;margin-top:.25rem}
+.status-badge{background:rgba(122,158,126,0.25);border:1px solid rgba(122,158,126,0.5);color:#a8d4ac;border-radius:100px;padding:.28rem .8rem;font-size:.7rem;font-weight:500;white-space:nowrap;display:flex;align-items:center;gap:.35rem}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#a8d4ac;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* FILTERS */
+.filters{padding:.9rem 1.75rem .4rem;display:flex;gap:.45rem;flex-wrap:wrap;flex-shrink:0}
+.filter-btn{padding:.35rem .9rem;border-radius:100px;border:1.5px solid rgba(92,58,30,0.18);background:transparent;font-size:.76rem;font-weight:500;cursor:pointer;color:var(--muted);transition:all .2s}
+.filter-btn.active{background:var(--brown);color:var(--cream);border-color:var(--brown)}
+.filter-btn:hover:not(.active){border-color:var(--brown);color:var(--brown)}
+
+/* MENU */
+.menu-section{padding:.65rem 1.75rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;margin-bottom:1.25rem}
+.card{background:var(--white);border-radius:16px;padding:1.1rem;border:1px solid rgba(92,58,30,0.07);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;animation:slideIn .3s ease both}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px var(--shadow)}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card-icon{font-size:1.9rem;margin-bottom:.6rem;display:block}
+.card h3{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--brown);margin-bottom:.2rem}
+.card p{font-size:.73rem;color:var(--muted);line-height:1.45;margin-bottom:.75rem}
+.card-bottom{display:flex;align-items:center;justify-content:space-between}
+.price{font-family:'Playfair Display',serif;font-size:1rem;color:var(--caramel);font-weight:700}
+.add-btn{width:27px;height:27px;border-radius:50%;background:var(--brown);color:var(--cream);border:none;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.add-btn:hover{background:var(--caramel);transform:scale(1.1)}
+.add-btn.added{background:var(--sage)}
+.badge{position:absolute;top:.65rem;right:.65rem;font-size:.56rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .48rem;border-radius:100px}
+.badge-new{background:var(--rose);color:white}
+.badge-hot{background:var(--caramel);color:white}
+
+/* AI */
+.ai-section{padding:1rem 1.75rem 1.25rem;flex-shrink:0}
+.ai-card{background:var(--white);border-radius:16px;border:1px solid rgba(92,58,30,0.1);overflow:hidden}
+.ai-header{background:var(--brown);padding:.85rem 1.15rem;display:flex;align-items:center;gap:.65rem}
+.ai-avatar{width:32px;height:32px;border-radius:50%;background:var(--caramel);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.ai-header-text h4{font-size:.85rem;color:var(--cream);font-weight:500}
+.ai-header-text p{font-size:.68rem;color:rgba(253,246,238,0.55)}
+.ai-messages{padding:.85rem 1.15rem;min-height:60px;max-height:150px;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem}
+.ai-msg{font-size:.78rem;line-height:1.55;padding:.5rem .8rem;border-radius:11px;max-width:90%}
+.ai-msg.bot{background:var(--cream2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:3px}
+.ai-msg.user{background:var(--brown);color:var(--cream);align-self:flex-end;border-bottom-right-radius:3px}
+.ai-msg.loading{color:var(--muted);font-style:italic}
+.ai-input-row{display:flex;gap:.45rem;padding:.65rem 1.15rem;border-top:1px solid rgba(92,58,30,0.08)}
+.ai-input{flex:1;padding:.52rem .82rem;border-radius:100px;border:1.5px solid rgba(92,58,30,0.15);background:var(--cream);font-size:.78rem;outline:none;font-family:'DM Sans',sans-serif;color:var(--ink)}
+.ai-input:focus{border-color:var(--caramel)}
+.ai-send{padding:.52rem .88rem;border-radius:100px;background:var(--brown);color:var(--cream);border:none;font-size:.76rem;cursor:pointer;transition:background .2s;white-space:nowrap}
+.ai-send:hover{background:var(--caramel)}
+.ai-send:disabled{opacity:.5;cursor:not-allowed}
+
+/* CART */
+.cart-header{padding:1.25rem 1.25rem .85rem;border-bottom:1px solid rgba(253,246,238,0.1);flex-shrink:0}
+.cart-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream)}
+.cart-subtitle{font-size:.73rem;color:rgba(253,246,238,0.5);margin-top:.15rem}
+.cart-items{flex:1;padding:.85rem 1.25rem;overflow-y:auto}
+.cart-empty{text-align:center;padding:2rem 1rem;color:rgba(253,246,238,0.35)}
+.cart-empty-icon{font-size:2.2rem;margin-bottom:.65rem;display:block}
+.cart-empty p{font-size:.8rem;line-height:1.55}
+.cart-item{display:flex;align-items:center;gap:.65rem;padding:.6rem 0;border-bottom:1px solid rgba(253,246,238,0.08)}
+.cart-item-icon{font-size:1.4rem;flex-shrink:0}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-size:.8rem;color:var(--cream);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-item-price{font-size:.72rem;color:var(--caramel2)}
+.cart-item-qty{display:flex;align-items:center;gap:.32rem;flex-shrink:0}
+.qty-btn{width:19px;height:19px;border-radius:50%;border:1px solid rgba(253,246,238,0.2);background:transparent;color:var(--cream);cursor:pointer;font-size:.72rem;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.qty-btn:hover{background:rgba(253,246,238,0.15)}
+.qty-num{font-size:.76rem;color:var(--cream);min-width:13px;text-align:center}
+.cart-footer{padding:1rem 1.25rem;border-top:1px solid rgba(253,246,238,0.1);flex-shrink:0}
+.cart-totals{margin-bottom:.85rem}
+.total-row{display:flex;justify-content:space-between;font-size:.78rem;color:rgba(253,246,238,0.6);margin-bottom:.32rem}
+.total-row.big{font-size:.92rem;color:var(--cream);font-weight:500;margin-top:.42rem;padding-top:.42rem;border-top:1px solid rgba(253,246,238,0.15)}
+.checkout-btn{width:100%;padding:.75rem;border-radius:11px;background:var(--caramel);color:white;border:none;font-size:.86rem;font-weight:500;cursor:pointer;transition:background .2s;font-family:'DM Sans',sans-serif}
+.checkout-btn:hover{background:var(--caramel2)}
+.checkout-btn:disabled{opacity:.4;cursor:not-allowed}
+.name-input{width:100%;padding:.62rem .92rem;border-radius:8px;border:1px solid rgba(253,246,238,0.15);background:rgba(253,246,238,0.08);color:var(--cream);font-size:.8rem;margin-bottom:.65rem;outline:none;font-family:'DM Sans',sans-serif}
+.name-input::placeholder{color:rgba(253,246,238,0.35)}
+.name-input:focus{border-color:rgba(232,170,104,0.5)}
+
+/* TRACKER */
+.tracker{padding:1.25rem 1.75rem}
+.tracker-empty{text-align:center;padding:3rem 2rem;color:var(--muted)}
+.tracker-empty-icon{font-size:2.5rem;margin-bottom:.8rem}
+.order-card{background:var(--white);border-radius:16px;padding:1.25rem;border:1px solid rgba(92,58,30,0.08);margin-bottom:.9rem}
+.order-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem}
+.order-num{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--brown)}
+.order-status{font-size:.7rem;font-weight:500;padding:.2rem .6rem;border-radius:100px}
+.status-preparing{background:rgba(192,125,64,0.12);color:var(--caramel)}
+.status-ready{background:rgba(122,158,126,0.15);color:#4a8a52}
+.order-items-list{display:flex;flex-wrap:wrap;gap:.32rem;margin-bottom:.8rem}
+.order-item-tag{font-size:.7rem;padding:.15rem .55rem;background:var(--cream2);border-radius:100px;color:var(--muted)}
+.order-progress{display:flex;gap:.38rem}
+.prog-step{flex:1;height:4px;border-radius:2px;background:var(--cream2);transition:background .5s}
+.prog-step.done{background:var(--sage)}
+.prog-step.active{background:var(--caramel)}
+.prog-labels{display:flex;justify-content:space-between;margin-top:.3rem}
+.prog-label{font-size:.6rem;color:var(--muted)}
+
+/* ── CONSOLE ── */
+.console-panel{background:var(--t-bg);border-top:2px solid var(--t-border);height:245px;display:flex;flex-direction:column;flex-shrink:0}
+.con-topbar{display:flex;align-items:center;justify-content:space-between;padding:.45rem .9rem;border-bottom:1px solid var(--t-border);background:var(--t-bg2);flex-shrink:0}
+.con-topbar-left{display:flex;align-items:center;gap:.7rem}
+.dots{display:flex;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#FF5F56}.dy{background:#FFBD2E}.dg{background:#27C93F}
+.con-title{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--t-gray)}
+.con-live{font-family:'JetBrains Mono',monospace;font-size:.62rem;padding:.12rem .45rem;border-radius:3px;background:rgba(63,185,80,0.15);color:var(--t-green);border:1px solid rgba(63,185,80,0.3)}
+.con-controls{display:flex;gap:.4rem}
+.cbtn{background:transparent;border:1px solid var(--t-border);color:var(--t-gray);font-size:.67rem;padding:.18rem .55rem;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s}
+.cbtn:hover{border-color:var(--t-blue);color:var(--t-blue)}
+.con-tabs{display:flex;border-bottom:1px solid var(--t-border);background:var(--t-bg2);flex-shrink:0}
+.ctab{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:.38rem .95rem;cursor:pointer;color:var(--t-gray);border-bottom:2px solid transparent;transition:all .15s}
+.ctab.active{color:var(--t-white);border-bottom-color:var(--t-blue)}
+.ctab:hover:not(.active){color:var(--t-white)}
+.con-body{flex:1;overflow-y:auto;padding:.65rem .9rem;display:flex;flex-direction:column;gap:.1rem}
+.con-body::-webkit-scrollbar{width:3px}
+.con-body::-webkit-scrollbar-thumb{background:var(--t-border);border-radius:2px}
+.log-line{font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.55;display:flex;gap:.65rem;align-items:baseline}
+.log-ts{color:var(--t-gray);flex-shrink:0;font-size:.62rem}
+.log-tag{flex-shrink:0;font-size:.6rem;font-weight:500;padding:.03rem .32rem;border-radius:3px;text-transform:uppercase;letter-spacing:.04em}
+.tsql{background:rgba(88,166,255,0.15);color:var(--t-blue);border:1px solid rgba(88,166,255,0.2)}
+.tapi{background:rgba(188,140,255,0.15);color:var(--t-purple);border:1px solid rgba(188,140,255,0.2)}
+.tevt{background:rgba(227,179,65,0.15);color:var(--t-yellow);border:1px solid rgba(227,179,65,0.2)}
+.tok{background:rgba(63,185,80,0.15);color:var(--t-green);border:1px solid rgba(63,185,80,0.2)}
+.terr{background:rgba(248,81,73,0.15);color:var(--t-red);border:1px solid rgba(248,81,73,0.2)}
+.log-msg{color:var(--t-white);flex:1;word-break:break-all}
+.kw{color:var(--t-blue)}.tb{color:var(--t-cyan)}.vl{color:var(--t-green)}.nm{color:var(--t-yellow)}.dm{color:var(--t-gray)}.pu{color:var(--t-purple)}.ok{color:var(--t-green);font-weight:500}.er{color:var(--t-red)}
+.db-view{padding:.65rem .9rem;overflow:auto;flex:1}
+.db-tbl{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.66rem}
+.db-tbl th{background:var(--t-bg2);color:var(--t-blue);text-align:left;padding:.38rem .65rem;border:1px solid var(--t-border);font-weight:500}
+.db-tbl td{padding:.3rem .65rem;border:1px solid var(--t-border);color:var(--t-white)}
+.db-tbl tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+.db-tbl tr:hover td{background:rgba(88,166,255,0.05)}
+.td-id{color:var(--t-yellow)}
+.td-s0,.td-s1,.td-s2{color:var(--t-yellow)}
+.td-s3{color:var(--t-green)}
+.db-empty{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--t-gray);padding:1.5rem;text-align:center}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(46,26,14,0.65);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--cream);border-radius:24px;padding:2.1rem;max-width:420px;width:100%;transform:translateY(22px);transition:transform .3s;text-align:center}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-icon{font-size:2.8rem;margin-bottom:.8rem}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--brown);margin-bottom:.4rem}
+.modal p{color:var(--muted);font-size:.85rem;line-height:1.55;margin-bottom:1.1rem}
+.order-number{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--caramel);margin:.35rem 0}
+.progress-steps{display:flex;gap:.45rem;align-items:center;justify-content:center;margin:1.25rem 0}
+.step{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--cream2);border:2px solid rgba(92,58,30,0.15);display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .4s}
+.step-dot.done{background:var(--sage);border-color:var(--sage)}
+.step-dot.active{background:var(--caramel);border-color:var(--caramel);animation:stp 1.5s infinite}
+@keyframes stp{0%,100%{box-shadow:0 0 0 0 rgba(192,125,64,.4)}50%{box-shadow:0 0 0 7px rgba(192,125,64,0)}}
+.step-label{font-size:.6rem;color:var(--muted);text-align:center}
+.step-line{width:20px;height:2px;background:rgba(92,58,30,.15);flex-shrink:0;margin-bottom:1rem}
+.step-line.done{background:var(--sage)}
+.modal-close{margin-top:.8rem;padding:.65rem 1.6rem;border-radius:100px;background:var(--brown);color:var(--cream);border:none;font-size:.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+.modal-close:hover{background:var(--brown3)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="top-area">
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <div class="logo">Kaffine<em>Break</em></div>
+        <div class="tab-btns">
+          <button class="tab-btn active" onclick="showView('menu')">Menu</button>
+          <button class="tab-btn" onclick="showView('tracker')">My Orders</button>
+        </div>
+      </div>
+
+      <div id="view-menu">
+        <div class="hero-strip">
+          <div><h1>Order your <em>perfect</em> break.</h1><p>Everything made fresh — your way, right now.</p></div>
+          <div class="status-badge"><span class="status-dot"></span>Open · ~12 min wait</div>
+        </div>
+        <div class="filters">
+          <button class="filter-btn active" onclick="filterMenu('all',this)">All</button>
+          <button class="filter-btn" onclick="filterMenu('coffee',this)">Coffee</button>
+          <button class="filter-btn" onclick="filterMenu('specialty',this)">Specialty</button>
+          <button class="filter-btn" onclick="filterMenu('cold',this)">Cold Drinks</button>
+          <button class="filter-btn" onclick="filterMenu('food',this)">Food</button>
+        </div>
+        <div class="menu-section"><div class="grid" id="menuGrid"></div></div>
+        <div class="ai-section">
+          <div class="ai-card">
+            <div class="ai-header">
+              <div class="ai-avatar">☕</div>
+              <div class="ai-header-text"><h4>Ask our Barista</h4><p>Powered by Claude AI · Ask anything about the menu</p></div>
+            </div>
+            <div class="ai-messages" id="aiMessages">
+              <div class="ai-msg bot">Hey! I'm your KaffineBreak barista 👋 Ask me what to order, what's sweet vs strong, or anything about our drinks!</div>
+            </div>
+            <div class="ai-input-row">
+              <input class="ai-input" id="aiInput" type="text" placeholder="What's good today?" onkeydown="if(event.key==='Enter')sendAI()"/>
+              <button class="ai-send" id="aiSendBtn" onclick="sendAI()">Ask ✦</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-tracker" style="display:none">
+        <div class="hero-strip"><div><h1>Your <em>orders</em></h1><p>Track everything from brew to pickup.</p></div></div>
+        <div class="tracker" id="trackerContent"><div class="tracker-empty"><div class="tracker-empty-icon">🧾</div><p>No orders yet!</p></div></div>
+      </div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div class="sidebar">
+      <div class="cart-header">
+        <div class="cart-title">Your Order</div>
+        <div class="cart-subtitle" id="cartCount">0 items</div>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty"><span class="cart-empty-icon">🛒</span><p>Your cart is empty.<br/>Add something delicious!</p></div>
+      </div>
+      <div class="cart-footer">
+        <div id="cartTotals" style="display:none" class="cart-totals">
+          <div class="total-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+          <div class="total-row"><span>Tax (8%)</span><span id="tax">$0.00</span></div>
+          <div class="total-row big"><span>Total</span><span id="total">$0.00</span></div>
+        </div>
+        <input class="name-input" id="nameInput" placeholder="Your name for pickup…"/>
+        <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled>Place Order →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSOLE -->
+  <div class="console-panel">
+    <div class="con-topbar">
+      <div class="con-topbar-left">
+        <div class="dots"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+        <span class="con-title">kaffinebreak_db — postgres@localhost:5432</span>
+        <span class="con-live">● LIVE</span>
+      </div>
+      <div class="con-controls">
+        <button class="cbtn" onclick="showConTab('logs')">Query Log</button>
+        <button class="cbtn" onclick="showConTab('orders')">orders</button>
+        <button class="cbtn" onclick="showConTab('cart')">cart_items</button>
+        <button class="cbtn" onclick="document.getElementById('con-logs').innerHTML='';okLog(dm('-- console cleared'))">Clear</button>
+      </div>
+    </div>
+    <div class="con-tabs">
+      <div class="ctab active" id="ctab-logs" onclick="showConTab('logs')">Query Log</div>
+      <div class="ctab" id="ctab-orders" onclick="showConTab('orders')">orders table</div>
+      <div class="ctab" id="ctab-cart" onclick="showConTab('cart')">cart_items table</div>
+    </div>
+    <div id="con-logs" class="con-body"></div>
+    <div id="con-orders" class="db-view" style="display:none"></div>
+    <div id="con-cart" class="db-view" style="display:none"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="orderModal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h2>Order placed!</h2>
+    <p>We're brewing your order right now. Come grab it when it's ready!</p>
+    <div class="order-number" id="modalOrderNum">#1042</div>
+    <div class="progress-steps">
+      <div class="step"><div class="step-dot active" id="step0">📋</div><div class="step-label">Received</div></div>
+      <div class="step-line" id="line0"></div>
+      <div class="step"><div class="step-dot" id="step1">☕</div><div class="step-label">Brewing</div></div>
+      <div class="step-line" id="line1"></div>
+      <div class="step"><div class="step-dot" id="step2">🎁</div><div class="step-label">Ready!</div></div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">Track my order →</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── SUPABASE ──
+const SUPABASE_URL = 'https://qkvvhqfdcyxhvrfptxls.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_qYbvlud2AB9E-46duVEBvw_9RWNzCQT';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const MENU=[
+  {id:1,cat:'coffee',icon:'☕',name:'The Classic Latte',desc:'Double shot, steamed whole milk, rosetta art.',price:5.50,badge:null},
+  {id:2,cat:'specialty',icon:'🍯',name:'Honey Lavender Latte',desc:'Lavender syrup, local honey, oat milk.',price:6.75,badge:'hot'},
+  {id:3,cat:'specialty',icon:'🍂',name:'Brown Butter Cortado',desc:'Espresso over brown butter foam. Nutty, rich.',price:6.25,badge:'new'},
+  {id:4,cat:'cold',icon:'🧊',name:'Iced Caramel Cloud',desc:'Cold brew, caramel sauce, vanilla cold foam.',price:6.50,badge:'hot'},
+  {id:5,cat:'coffee',icon:'🖤',name:'Midnight Espresso',desc:'Double espresso, dark chocolate dusting.',price:4.50,badge:null},
+  {id:6,cat:'food',icon:'🥐',name:'Almond Croissant',desc:'Twice-baked with almond cream.',price:4.75,badge:null},
+  {id:7,cat:'cold',icon:'🍵',name:'Matcha Hibiscus Fizz',desc:'Ceremonial matcha, hibiscus, lemon, sparkling.',price:6.00,badge:'new'},
+  {id:8,cat:'food',icon:'🍪',name:'Brown Sugar Cookie',desc:'Chewy, crisp edges, maldon salt finish.',price:3.50,badge:null},
+  {id:9,cat:'specialty',icon:'🌸',name:'Rose Cardamom Latte',desc:'Rose water, cardamom, steamed oat milk.',price:6.50,badge:'new'},
+  {id:10,cat:'coffee',icon:'🤍',name:'Vanilla Flat White',desc:'Ristretto, whole milk micro-foam, vanilla.',price:5.75,badge:null},
+];
+
+let DB={orders:[],cart_items:[]};
+let cart={},orders=[],orderCounter=1040+Math.floor(Math.random()*10);
+let currentFilter='all',activeConTab='logs';
+let dbOrdId=0,dbCiId=0;
+
+// ── CONSOLE HELPERS ──
+const ts=()=>new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const kw=s=>`<span class="kw">${s}</span>`;
+const tb=s=>`<span class="tb">${s}</span>`;
+const vl=s=>`<span class="vl">'${s}'</span>`;
+const nm=s=>`<span class="nm">${s}</span>`;
+const dm=s=>`<span class="dm">${s}</span>`;
+const pu=s=>`<span class="pu">${s}</span>`;
+const ok=s=>`<span class="ok">${s}</span>`;
+const er=s=>`<span class="er">${s}</span>`;
+
+function log(tag,msg){
+  const body=document.getElementById('con-logs');
+  const line=document.createElement('div');
+  line.className='log-line';
+  line.innerHTML=`<span class="log-ts">${ts()}</span><span class="log-tag t${tag}">${tag}</span><span class="log-msg">${msg}</span>`;
+  body.appendChild(line);
+  body.scrollTop=body.scrollHeight;
+}
+const sqlLog=m=>log('sql',m);
+const apiLog=m=>log('api',m);
+const evtLog=m=>log('evt',m);
+const okLog=m=>log('ok',m);
+const errLog=m=>log('err',m);
+
+// ── DB TABLE RENDERERS ──
+function renderDbOrders(){
+  const el=document.getElementById('con-orders');
+  if(!DB.orders.length){el.innerHTML='<div class="db-empty">-- orders table is empty</div>';return;}
+  const statuses=['received','brewing','almost_ready','ready'];
+  el.innerHTML=`<table class="db-tbl"><thead><tr><th>id</th><th>order_num</th><th>customer_name</th><th>subtotal</th><th>tax</th><th>total</th><th>status</th><th>created_at</th></tr></thead><tbody>
+  ${DB.orders.map(o=>`<tr><td class="td-id">${o.id}</td><td>${o.order_num}</td><td>${o.customer_name}</td><td>$${o.subtotal.toFixed(2)}</td><td>$${o.tax.toFixed(2)}</td><td>$${o.total.toFixed(2)}</td><td class="td-s${o.status}">${statuses[o.status]}</td><td>${o.created_at}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function renderDbCart(){
+  const el=document.getElementById('con-cart');
+  if(!DB.cart_items.length){el.innerHTML='<div class="db-empty">-- cart_items table is empty</div>';return;}
+  el.innerHTML=`<table class="db-tbl"><thead><tr><th>id</th><th>order_id</th><th>item_id</th><th>item_name</th><th>qty</th><th>unit_price</th><th>line_total</th></tr></thead><tbody>
+  ${DB.cart_items.map(c=>`<tr><td class="td-id">${c.id}</td><td>${c.order_id}</td><td>${c.item_id}</td><td>${c.item_name}</td><td>${c.qty}</td><td>$${c.unit_price.toFixed(2)}</td><td>$${c.line_total.toFixed(2)}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function showConTab(tab){
+  activeConTab=tab;
+  ['logs','orders','cart'].forEach(t=>{
+    const isLogs=t==='logs';
+    document.getElementById('con-'+t).style.display=t===tab?(isLogs?'flex':'block'):'none';
+    document.getElementById('ctab-'+t).classList.toggle('active',t===tab);
+  });
+  if(tab==='orders')renderDbOrders();
+  if(tab==='cart')renderDbCart();
+}
+
+// ── BOOT ──
+async function boot(){
+  sqlLog(`${kw('CREATE TABLE IF NOT EXISTS')} ${tb('orders')} ${dm('(id SERIAL PRIMARY KEY, order_num VARCHAR(10), customer_name TEXT, subtotal NUMERIC, tax NUMERIC, total NUMERIC, status INT DEFAULT 0, created_at TIMESTAMPTZ DEFAULT NOW())')}`);
+  sqlLog(`${kw('CREATE TABLE IF NOT EXISTS')} ${tb('cart_items')} ${dm('(id SERIAL PRIMARY KEY, order_id INT REFERENCES orders(id), item_id INT, item_name TEXT, qty INT, unit_price NUMERIC, line_total NUMERIC)')}`);
+  okLog(ok('✓ Schema ready.'));
+  apiLog(`${pu('CONNECTING')} ${vl('https://qkvvhqfdcyxhvrfptxls.supabase.co')} ${dm('...')}`);
+  const {data, error} = await sb.from('orders').select('count', {count:'exact',head:true});
+  if(error){
+    errLog(er('✗ Supabase connection failed: '+error.message));
+  } else {
+    okLog(`${ok('✓ Supabase connected!')} ${dm('orders table has')} ${nm(data?.length||0)} ${dm('existing rows')}`);
+  }
+  sqlLog(`${kw('SELECT')} ${dm('*')} ${kw('FROM')} ${tb('menu_items')} ${kw('WHERE')} status = ${vl('active')} ${kw('ORDER BY')} category${dm(';')}`);
+  okLog(`${ok('✓ '+MENU.length+' rows returned')} ${dm('(menu loaded into memory)')}`);
+}
+
+// ── MENU ──
+function renderMenu(filter){
+  currentFilter=filter;
+  const items=filter==='all'?MENU:MENU.filter(i=>i.cat===filter);
+  sqlLog(`${kw('SELECT')} ${dm('*')} ${kw('FROM')} ${tb('menu_items')}${filter!=='all'?' '+kw('WHERE')+' category = '+vl(filter):''} ${kw('ORDER BY')} sort_order${dm(';')}`);
+  okLog(`${ok('✓ '+items.length+' row'+(items.length!==1?'s':'')+' returned')}`);
+  document.getElementById('menuGrid').innerHTML=items.map((item,i)=>`
+    <div class="card" style="animation-delay:${i*.04}s">
+      ${item.badge==='new'?'<span class="badge badge-new">New</span>':''}
+      ${item.badge==='hot'?'<span class="badge badge-hot">Popular</span>':''}
+      <span class="card-icon">${item.icon}</span>
+      <h3>${item.name}</h3><p>${item.desc}</p>
+      <div class="card-bottom">
+        <span class="price">$${item.price.toFixed(2)}</span>
+        <button class="add-btn ${cart[item.id]?'added':''}" onclick="addToCart(${item.id})">${cart[item.id]?'✓':'+'}</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterMenu(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(cat);
+}
+
+// ── CART ──
+function addToCart(id){
+  const item=MENU.find(m=>m.id===id);
+  const wasIn=!!cart[id];
+  cart[id]=(cart[id]||0)+1;
+  evtLog(`${pu('ADD_TO_CART')} item_id=${nm(id)} qty_now=${nm(cart[id])}`);
+  if(wasIn){
+    sqlLog(`${kw('UPDATE')} ${tb('session_cart')} ${kw('SET')} qty = ${nm(cart[id])}, updated_at = ${vl('NOW()')} ${kw('WHERE')} item_id = ${nm(id)}${dm(';')}`);
+  } else {
+    sqlLog(`${kw('INSERT INTO')} ${tb('session_cart')} ${dm('(item_id, item_name, qty, unit_price)')} ${kw('VALUES')} (${nm(id)}, ${vl(item.name)}, ${nm(1)}, ${nm(item.price.toFixed(2))})${dm(';')}`);
+  }
+  okLog(`${ok('✓ Cart updated')} ${dm('('+Object.keys(cart).length+' distinct items)')}`);
+  updateCart();renderMenu(currentFilter);
+}
+
+function changeQty(id,delta){
+  cart[id]=(cart[id]||0)+delta;
+  if(cart[id]<=0){
+    delete cart[id];
+    sqlLog(`${kw('DELETE FROM')} ${tb('session_cart')} ${kw('WHERE')} item_id = ${nm(id)}${dm(';')}`);
+    okLog(ok('✓ Item removed from cart'));
+  } else {
+    sqlLog(`${kw('UPDATE')} ${tb('session_cart')} ${kw('SET')} qty = ${nm(cart[id])}, updated_at = ${vl('NOW()')} ${kw('WHERE')} item_id = ${nm(id)}${dm(';')}`);
+    okLog(`${ok('✓ Qty →')} ${nm(cart[id])}`);
+  }
+  updateCart();renderMenu(currentFilter);
+}
+
+function updateCart(){
+  const ids=Object.keys(cart);
+  const count=ids.reduce((s,id)=>s+cart[id],0);
+  const sub=ids.reduce((s,id)=>s+MENU.find(m=>m.id==id).price*cart[id],0);
+  const tax=sub*.08;
+  document.getElementById('cartCount').textContent=count?`${count} item${count>1?'s':''}`:'0 items';
+  if(!ids.length){
+    document.getElementById('cartItems').innerHTML='<div class="cart-empty"><span class="cart-empty-icon">🛒</span><p>Your cart is empty.<br/>Add something delicious!</p></div>';
+    document.getElementById('cartTotals').style.display='none';
+    document.getElementById('checkoutBtn').disabled=true;
+    return;
+  }
+  document.getElementById('cartItems').innerHTML=ids.map(id=>{
+    const item=MENU.find(m=>m.id==id);
+    return `<div class="cart-item">
+      <span class="cart-item-icon">${item.icon}</span>
+      <div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">$${(item.price*cart[id]).toFixed(2)}</div></div>
+      <div class="cart-item-qty">
+        <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+        <span class="qty-num">${cart[id]}</span>
+        <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('cartTotals').style.display='block';
+  document.getElementById('subtotal').textContent='$'+sub.toFixed(2);
+  document.getElementById('tax').textContent='$'+tax.toFixed(2);
+  document.getElementById('total').textContent='$'+(sub+tax).toFixed(2);
+  document.getElementById('checkoutBtn').disabled=!document.getElementById('nameInput').value.trim();
+}
+
+document.getElementById('nameInput').addEventListener('input',()=>{
+  document.getElementById('checkoutBtn').disabled=!document.getElementById('nameInput').value.trim()||!Object.keys(cart).length;
+});
+
+// ── CHECKOUT (real Supabase) ──
+async function checkout(){
+  const name=document.getElementById('nameInput').value.trim();
+  if(!name||!Object.keys(cart).length)return;
+  document.getElementById('checkoutBtn').disabled=true;
+  document.getElementById('checkoutBtn').textContent='Placing order…';
+
+  orderCounter++;
+  const orderNum='#'+orderCounter;
+  const items=Object.keys(cart).map(id=>({...MENU.find(m=>m.id==id),qty:cart[id]}));
+  const sub=items.reduce((s,i)=>s+i.price*i.qty,0);
+  const tax=sub*.08;
+  const total=sub+tax;
+
+  evtLog(`${pu('CHECKOUT_INITIATED')} customer=${vl(name)} items=${nm(items.length)} total=${nm('$'+total.toFixed(2))}`);
+  sqlLog(`${kw('BEGIN')}${dm(';')}`);
+  sqlLog(`${kw('INSERT INTO')} ${tb('orders')} ${dm('(order_num, customer_name, subtotal, tax, total, status)')} ${kw('VALUES')} (${vl(orderNum)}, ${vl(name)}, ${nm(sub.toFixed(2))}, ${nm(tax.toFixed(2))}, ${nm(total.toFixed(2))}, ${nm(0)}) ${kw('RETURNING')} id${dm(';')}`);
+
+  try {
+    // INSERT order into real Supabase
+    const {data:orderData, error:orderErr} = await sb.from('orders').insert({
+      order_num: orderNum,
+      customer_name: name,
+      subtotal: sub,
+      tax: tax,
+      total: total,
+      status: 0
+    }).select().single();
+
+    if(orderErr) throw orderErr;
+    const realId = orderData.id;
+    dbOrdId = realId;
+    okLog(`${ok('✓ orders INSERT')} ${dm('→ id=')}${nm(realId)} ${dm('(real Supabase row)')}`);
+
+    // INSERT cart items
+    const cartRows = items.map(item=>({
+      order_id: realId,
+      item_id: item.id,
+      item_name: item.name,
+      qty: item.qty,
+      unit_price: item.price,
+      line_total: item.price * item.qty
+    }));
+    items.forEach(item=>sqlLog(`${kw('INSERT INTO')} ${tb('cart_items')} ${dm('(order_id, item_id, item_name, qty, unit_price, line_total)')} ${kw('VALUES')} (${nm(realId)}, ${nm(item.id)}, ${vl(item.name)}, ${nm(item.qty)}, ${nm(item.price.toFixed(2))}, ${nm((item.price*item.qty).toFixed(2))})${dm(';')}`));
+    const {error:ciErr} = await sb.from('cart_items').insert(cartRows);
+    if(ciErr) throw ciErr;
+    okLog(`${ok('✓ cart_items INSERT')} ${dm('→ '+nm(items.length)+' rows (real Supabase rows)')}`);
+    sqlLog(`${kw('COMMIT')}${dm(';')}`);
+    okLog(`${ok('✓ TRANSACTION COMMITTED')} ${dm('order=')}${vl(orderNum)} ${dm('→ persisted to Supabase ✓')}`);
+
+    // Update local mirror for table viewer
+    DB.orders.push({id:realId,order_num:orderNum,customer_name:name,subtotal:sub,tax,total,status:0,created_at:new Date().toISOString().slice(0,19).replace('T',' ')});
+    items.forEach(item=>DB.cart_items.push({id:Math.random(),order_id:realId,item_id:item.id,item_name:item.name,qty:item.qty,unit_price:item.price,line_total:item.price*item.qty}));
+
+    const orderObj={id:orderNum,name,items,subtotal:sub,status:0,time:new Date(),dbId:realId};
+    orders.unshift(orderObj);
+    cart={};
+    updateCart();
+    document.getElementById('nameInput').value='';
+    document.getElementById('checkoutBtn').textContent='Place Order →';
+    document.getElementById('modalOrderNum').textContent=orderNum;
+    openModal(orderObj);
+    renderTracker();
+    if(activeConTab==='orders')renderDbOrders();
+    if(activeConTab==='cart')renderDbCart();
+
+  } catch(e) {
+    errLog(er('✗ Supabase error: '+e.message));
+    document.getElementById('checkoutBtn').disabled=false;
+    document.getElementById('checkoutBtn').textContent='Place Order →';
+    alert('Order failed: '+e.message+'\n\nCheck the console for details.');
+  }
+}
+
+// ── MODAL + STATUS UPDATES ──
+function openModal(order){
+  document.getElementById('orderModal').classList.add('open');
+  [0,1,2].forEach(i=>{document.getElementById('step'+i).className='step-dot';if(i>0)document.getElementById('line'+(i-1)).className='step-line';});
+  document.getElementById('step0').classList.add('done');
+
+  const updateStatus=(newStatus,stepActive,stepDone,linesDone,delay)=>setTimeout(async ()=>{
+    if(stepDone!==null){document.getElementById('step'+stepDone).className='step-dot done';}
+    if(stepActive!==null){document.getElementById('step'+stepActive).classList.add('active');}
+    linesDone.forEach(l=>document.getElementById('line'+l).className='step-line done');
+    order.status=newStatus;
+    const statusLabels=['received','brewing','almost_ready','ready'];
+    sqlLog(`${kw('UPDATE')} ${tb('orders')} ${kw('SET')} status = ${nm(newStatus)} ${kw('WHERE')} id = ${nm(order.dbId)}${dm(';')}`);
+    const {error} = await sb.from('orders').update({status:newStatus}).eq('id',order.dbId);
+    if(error){ errLog(er('✗ Status update failed: '+error.message)); }
+    else { okLog(`${ok('✓ Status →')} ${vl(statusLabels[newStatus])} ${dm('(Supabase updated)')}`); }
+    const dbO=DB.orders.find(o=>o.id===order.dbId);
+    if(dbO)dbO.status=newStatus;
+    renderTracker();
+    if(activeConTab==='orders')renderDbOrders();
+  },delay);
+
+  updateStatus(1,1,null,[0],1400);
+  updateStatus(2,2,1,[0,1],5200);
+  setTimeout(async ()=>{
+    document.getElementById('step2').className='step-dot done';
+    document.getElementById('step1').className='step-dot done';
+    order.status=3;
+    sqlLog(`${kw('UPDATE')} ${tb('orders')} ${kw('SET')} status = ${nm(3)} ${kw('WHERE')} id = ${nm(order.dbId)}${dm(';')}`);
+    const {error} = await sb.from('orders').update({status:3}).eq('id',order.dbId);
+    if(error){ errLog(er('✗ Status update failed: '+error.message)); }
+    else { okLog(`${ok('✓ Status → ready 🎉')} ${dm('— Supabase updated, customer notified')}`); }
+    const dbO=DB.orders.find(o=>o.id===order.dbId);
+    if(dbO)dbO.status=3;
+    renderTracker();
+    if(activeConTab==='orders')renderDbOrders();
+  },8800);
+}
+
+function closeModal(){document.getElementById('orderModal').classList.remove('open');showView('tracker');}
+
+// ── TRACKER ──
+function renderTracker(){
+  const el=document.getElementById('trackerContent');
+  if(!orders.length){el.innerHTML='<div class="tracker-empty"><div class="tracker-empty-icon">🧾</div><p>No orders yet!</p></div>';return;}
+  const sl=['Received','Brewing','Almost ready','Ready for pickup!'];
+  const sc=['status-preparing','status-preparing','status-preparing','status-ready'];
+  el.innerHTML=orders.map(o=>`<div class="order-card">
+    <div class="order-card-top">
+      <div><div class="order-num">${o.id}</div><div style="font-size:.72rem;color:var(--muted);margin-top:.18rem">for ${o.name} · $${(o.subtotal*1.08).toFixed(2)}</div></div>
+      <span class="order-status ${sc[o.status]}">${sl[o.status]}</span>
+    </div>
+    <div class="order-items-list">${o.items.map(i=>`<span class="order-item-tag">${i.icon} ${i.name}${i.qty>1?' ×'+i.qty:''}</span>`).join('')}</div>
+    <div class="order-progress">${[0,1,2,3].map(s=>`<div class="prog-step ${o.status>s?'done':o.status===s?'active':''}"></div>`).join('')}</div>
+    <div class="prog-labels"><span class="prog-label">Received</span><span class="prog-label">Brewing</span><span class="prog-label">Almost</span><span class="prog-label">Ready!</span></div>
+  </div>`).join('');
+}
+
+// ── VIEWS ──
+function showView(v){
+  document.getElementById('view-menu').style.display=v==='menu'?'block':'none';
+  document.getElementById('view-tracker').style.display=v==='tracker'?'block':'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(v==='menu'?0:1)));
+  if(v==='tracker')renderTracker();
+}
+
+// ── AI ──
+const MENU_CONTEXT=MENU.map(m=>`- ${m.name} ($${m.price.toFixed(2)}): ${m.desc}`).join('\n');
+const SYS=`You are a warm, witty barista at KaffineBreak, a cozy coffee shop. Help customers choose what to order. Keep replies to 2-4 sentences, conversational, no bullet points. Menu:\n\n${MENU_CONTEXT}\n\nUse exact menu names. Be fun and personable.`;
+let aiHistory=[];
+
+async function sendAI(){
+  const input=document.getElementById('aiInput');
+  const btn=document.getElementById('aiSendBtn');
+  const msg=input.value.trim();
+  if(!msg)return;
+  addAIMsg(msg,'user');input.value='';btn.disabled=true;
+  aiHistory.push({role:'user',content:msg});
+  addAIMsg('Brewing up an answer…','bot loading');
+
+  apiLog(`${pu('POST')} /v1/messages ${dm('model=')}${vl('claude-sonnet-4-20250514')} ${dm('messages=')}${nm(aiHistory.length)}`);
+  sqlLog(`${kw('INSERT INTO')} ${tb('ai_conversations')} ${dm('(role, content)')} ${kw('VALUES')} (${vl('user')}, ${vl(msg.slice(0,28)+(msg.length>28?'…':''))})${dm(';')}`);
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:aiHistory})});
+    const data=await res.json();
+    const reply=data.content?.map(c=>c.text||'').join('')||"Hmm, try asking again!";
+    document.getElementById('aiMessages').querySelector('.loading')?.remove();
+    aiHistory.push({role:'assistant',content:reply});
+    addAIMsg(reply,'bot');
+    okLog(`${ok('✓ AI response')} ${dm('output_tokens=')}${nm(data.usage?.output_tokens||'?')} ${dm('stop=')}${vl(data.stop_reason||'end_turn')}`);
+    sqlLog(`${kw('INSERT INTO')} ${tb('ai_conversations')} ${dm('(role, content, tokens)')} ${kw('VALUES')} (${vl('assistant')}, ${vl(reply.slice(0,28)+'…')}, ${nm(data.usage?.output_tokens||0)})${dm(';')}`);
+  }catch(e){
+    const l=document.getElementById('aiMessages').querySelector('.loading');
+    if(l)l.textContent="Sorry, I'm on a quick break. Try again!";
+    errLog(er('✗ API error: '+e.message));
+  }
+  btn.disabled=false;input.focus();
+}
+
+function addAIMsg(text,cls){
+  const msgs=document.getElementById('aiMessages');
+  const el=document.createElement('div');
+  el.className='ai-msg '+cls;el.textContent=text;
+  msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;
+}
+
+boot();
+renderMenu('all');
+</script>
+</body>
+</html>
