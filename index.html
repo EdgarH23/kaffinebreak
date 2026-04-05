@@ -8,26 +8,14 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0F0B08;
-  --bg2:#1A1410;
-  --bg3:#221C16;
-  --card:#1E1812;
-  --border:rgba(255,200,120,0.08);
-  --border2:rgba(255,200,120,0.15);
-  --caramel:#C07D40;
-  --caramel2:#E8AA68;
-  --gold:#F0C060;
-  --cream:rgba(255,240,220,0.9);
-  --cream2:rgba(255,240,220,0.55);
-  --cream3:rgba(255,240,220,0.25);
-  --rose:#C4706A;
-  --sage:#6A9470;
-  --glow2:rgba(192,125,64,0.07);
+  --bg:#0F0B08;--bg2:#1A1410;--bg3:#221C16;--card:#1E1812;
+  --border:rgba(255,200,120,0.08);--border2:rgba(255,200,120,0.15);
+  --caramel:#C07D40;--caramel2:#E8AA68;--gold:#F0C060;
+  --cream:rgba(255,240,220,0.9);--cream2:rgba(255,240,220,0.55);--cream3:rgba(255,240,220,0.25);
+  --sage:#6A9470;--glow2:rgba(192,125,64,0.07);
 }
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);min-height:100vh}
-
-/* ── TOPBAR ── */
 .topbar{position:sticky;top:0;z-index:80;background:rgba(15,11,8,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;height:66px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--cream)}
 .logo em{color:var(--caramel2);font-style:italic}
@@ -35,14 +23,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .tab-btns{display:flex;background:var(--bg3);border-radius:100px;padding:3px;gap:2px;border:1px solid var(--border)}
 .tab-btn{padding:.38rem 1rem;border-radius:100px;border:none;background:transparent;font-size:.8rem;font-weight:500;cursor:pointer;color:var(--cream2);transition:all .2s;font-family:'DM Sans',sans-serif}
 .tab-btn.active{background:var(--caramel);color:#fff}
-
-/* cart trigger */
 .cart-trigger{position:relative;background:var(--bg3);border:1px solid var(--border2);color:var(--cream);border-radius:100px;padding:.5rem 1.15rem;font-size:.82rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:.5rem;transition:all .2s;font-family:'DM Sans',sans-serif}
 .cart-trigger:hover{border-color:var(--caramel);color:var(--caramel2)}
 .cart-badge{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:var(--caramel);color:#fff;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all .25s;box-shadow:0 2px 6px rgba(192,125,64,0.5)}
 .cart-badge.show{opacity:1;transform:scale(1)}
-
-/* ── HERO ── */
 .hero{padding:2.5rem 2rem 2rem;background:linear-gradient(160deg,var(--bg2) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(192,125,64,0.1) 0%,transparent 70%);pointer-events:none}
 .hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);color:var(--cream);line-height:1.15;position:relative}
@@ -51,35 +35,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .status-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(106,148,112,0.15);border:1px solid rgba(106,148,112,0.3);color:#8dc494;border-radius:100px;padding:.3rem .85rem;font-size:.72rem;font-weight:500;margin-top:1rem}
 .status-dot{width:6px;height:6px;border-radius:50%;background:#8dc494;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ── FILTERS ── */
 .filters{padding:1.1rem 2rem .6rem;display:flex;gap:.45rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
 .filter-btn{padding:.38rem 1rem;border-radius:100px;border:1px solid var(--border2);background:transparent;font-size:.78rem;font-weight:500;cursor:pointer;color:var(--cream2);transition:all .2s;font-family:'DM Sans',sans-serif}
 .filter-btn.active{background:var(--caramel);color:#fff;border-color:var(--caramel)}
 .filter-btn:hover:not(.active){border-color:var(--caramel);color:var(--caramel)}
-
-/* ── MENU ── */
 .menu-wrap{padding:1.5rem 2rem 2rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
 .card{background:var(--card);border-radius:18px;padding:1.3rem;border:1px solid var(--border);transition:transform .22s,box-shadow .22s,border-color .22s;position:relative;overflow:hidden;animation:fadeUp .35s ease both}
-.card::before{content:'';position:absolute;inset:0;border-radius:18px;background:radial-gradient(circle at 50% 0%,var(--glow2),transparent 70%);opacity:0;transition:opacity .3s}
+.card::before{content:'';position:absolute;inset:0;border-radius:18px;background:radial-gradient(circle at 50% 0%,var(--glow2),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
 .card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.5),0 0 0 1px rgba(192,125,64,0.2);border-color:rgba(192,125,64,0.2)}
 .card:hover::before{opacity:1}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.card-icon{font-size:2.2rem;margin-bottom:.75rem;display:block}
-.card h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--cream);margin-bottom:.25rem}
-.card p{font-size:.75rem;color:var(--cream2);line-height:1.5;margin-bottom:.9rem}
+.card-icon{font-size:2.2rem;margin-bottom:.75rem;display:block;pointer-events:none}
+.card h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--cream);margin-bottom:.25rem;pointer-events:none}
+.card p{font-size:.75rem;color:var(--cream2);line-height:1.5;margin-bottom:.9rem;pointer-events:none}
 .card-bottom{display:flex;align-items:center;justify-content:space-between}
-.price{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-weight:700}
-.add-btn{width:30px;height:30px;border-radius:50%;background:var(--caramel);color:#fff;border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;box-shadow:0 2px 8px rgba(192,125,64,0.3)}
+.price{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-weight:700;pointer-events:none}
+.add-btn{width:36px;height:36px;border-radius:50%;background:var(--caramel);color:#fff;border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;box-shadow:0 2px 8px rgba(192,125,64,0.3);user-select:none;-webkit-user-select:none}
 .add-btn:hover{background:var(--caramel2);transform:scale(1.12);box-shadow:0 4px 16px rgba(192,125,64,0.45)}
-.add-btn.added{background:var(--sage);box-shadow:0 2px 8px rgba(106,148,112,0.3)}
-
-/* ── AI ── */
+.add-btn.added{background:var(--sage)}
 .ai-wrap{padding:0 2rem 3rem}
 .ai-card{background:var(--card);border-radius:18px;border:1px solid var(--border);overflow:hidden;max-width:680px}
 .ai-head{background:linear-gradient(135deg,#2A1F14,#1A1410);padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)}
-.ai-avatar{width:36px;height:36px;border-radius:50%;background:var(--caramel);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(192,125,64,0.4)}
+.ai-avatar{width:36px;height:36px;border-radius:50%;background:var(--caramel);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .ai-head h4{font-size:.88rem;color:var(--cream);font-weight:500}
 .ai-head p{font-size:.7rem;color:var(--cream3);margin-top:.1rem}
 .ai-msgs{padding:1rem 1.25rem;min-height:72px;max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:.6rem}
@@ -94,13 +72,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .ai-send{padding:.6rem 1.1rem;border-radius:100px;background:var(--caramel);color:#fff;border:none;font-size:.8rem;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:'DM Sans',sans-serif}
 .ai-send:hover{background:var(--caramel2)}
 .ai-send:disabled{opacity:.4;cursor:not-allowed}
-
-/* ── TRACKER ── */
 .tracker-wrap{padding:1.5rem 2rem 3rem;max-width:720px}
 .tracker-empty{text-align:center;padding:4rem 2rem;color:var(--cream3)}
 .tracker-empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.4}
-.order-card{background:var(--card);border-radius:18px;padding:1.4rem;border:1px solid var(--border);margin-bottom:1rem;transition:border-color .2s}
-.order-card:hover{border-color:var(--border2)}
+.order-card{background:var(--card);border-radius:18px;padding:1.4rem;border:1px solid var(--border);margin-bottom:1rem}
 .order-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem}
 .order-num{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--cream)}
 .order-meta{font-size:.73rem;color:var(--cream3);margin-top:.2rem}
@@ -115,8 +90,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .prog-step.active{background:var(--caramel)}
 .prog-labels{display:flex;justify-content:space-between}
 .prog-label{font-size:.6rem;color:var(--cream3)}
-
-/* ── DRAWER ── */
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(3px)}
 .drawer-overlay.open{opacity:1;pointer-events:all}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--bg2);border-left:1px solid var(--border2);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .36s cubic-bezier(.4,0,.2,1)}
@@ -131,14 +104,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .drawer-empty-icon{font-size:2.8rem;margin-bottom:.9rem;display:block;opacity:.4}
 .drawer-empty p{font-size:.84rem;line-height:1.6}
 .cart-item{display:flex;align-items:center;gap:.8rem;padding:.75rem 0;border-bottom:1px solid var(--border)}
-.cart-item-icon{font-size:1.6rem;flex-shrink:0}
-.cart-item-info{flex:1;min-width:0}
+.cart-item-icon{font-size:1.6rem;flex-shrink:0;pointer-events:none}
+.cart-item-info{flex:1;min-width:0;pointer-events:none}
 .cart-item-name{font-size:.84rem;color:var(--cream);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cart-item-price{font-size:.73rem;color:var(--caramel2);margin-top:.1rem}
 .qty-controls{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
 .qty-btn{width:24px;height:24px;border-radius:50%;border:1px solid var(--border2);background:transparent;color:var(--cream);cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .qty-btn:hover{background:var(--caramel);border-color:var(--caramel)}
-.qty-num{font-size:.82rem;color:var(--cream);min-width:18px;text-align:center;font-weight:500}
+.qty-num{font-size:.82rem;color:var(--cream);min-width:18px;text-align:center;font-weight:500;pointer-events:none}
 .drawer-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border);flex-shrink:0}
 .totals{margin-bottom:1rem}
 .total-row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--cream3);margin-bottom:.38rem}
@@ -148,10 +121,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .name-input::placeholder{color:var(--cream3)}
 .name-input:focus{border-color:var(--caramel)}
 .checkout-btn{width:100%;padding:.9rem;border-radius:12px;background:var(--caramel);color:#fff;border:none;font-size:.92rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 16px rgba(192,125,64,0.25)}
-.checkout-btn:hover:not(:disabled){background:var(--caramel2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,125,64,0.35)}
+.checkout-btn:hover:not(:disabled){background:var(--caramel2);transform:translateY(-1px)}
 .checkout-btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
-
-/* ── MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s}
 .modal-bg.open{opacity:1;pointer-events:all}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:28px;padding:2.5rem;max-width:460px;width:100%;transform:translateY(20px);transition:transform .35s;text-align:center}
@@ -171,7 +142,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
 .step-line.done{background:var(--sage)}
 .modal-btn{padding:.8rem 2.2rem;border-radius:100px;background:var(--caramel);color:#fff;border:none;font-size:.9rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(192,125,64,0.3)}
 .modal-btn:hover{background:var(--caramel2);transform:translateY(-1px)}
-
 @media(max-width:600px){
   .topbar{padding:0 1rem}
   .hero,.menu-wrap,.ai-wrap,.tracker-wrap{padding-left:1rem;padding-right:1rem}
@@ -186,28 +156,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
   <div class="logo">Kaffine<em>Break</em></div>
   <div class="topbar-right">
     <div class="tab-btns">
-      <button class="tab-btn active" onclick="showView('menu')">Menu</button>
-      <button class="tab-btn" onclick="showView('tracker')">My Orders</button>
+      <button class="tab-btn active" id="btnMenu">Menu</button>
+      <button class="tab-btn" id="btnTracker">My Orders</button>
     </div>
-    <button class="cart-trigger" onclick="openDrawer()">
+    <button class="cart-trigger" id="cartTrigger">
       🛒 Cart
       <span class="cart-badge" id="cartBadge">0</span>
     </button>
   </div>
 </nav>
 
-<!-- MENU VIEW -->
 <div id="view-menu">
   <div class="hero">
     <h1>Order your <em>perfect</em> break.</h1>
     <p>Everything made fresh — your way, right now.</p>
+    <div class="status-badge"><span class="status-dot"></span>Open now</div>
   </div>
   <div class="filters">
-    <button class="filter-btn active" onclick="filterMenu('all',this)">All</button>
-    <button class="filter-btn" onclick="filterMenu('coffee',this)">Coffee</button>
-    <button class="filter-btn" onclick="filterMenu('specialty',this)">Specialty</button>
-    <button class="filter-btn" onclick="filterMenu('cold',this)">Cold Drinks</button>
-    <button class="filter-btn" onclick="filterMenu('food',this)">Food</button>
+    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="coffee">Coffee</button>
+    <button class="filter-btn" data-cat="specialty">Specialty</button>
+    <button class="filter-btn" data-cat="cold">Cold Drinks</button>
+    <button class="filter-btn" data-cat="food">Food</button>
   </div>
   <div class="menu-wrap"><div class="grid" id="menuGrid"></div></div>
   <div class="ai-wrap">
@@ -220,14 +190,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
         <div class="ai-msg bot">Hey! I'm your KaffineBreak barista 👋 Ask me what to order, what's sweet vs strong, or anything about our drinks!</div>
       </div>
       <div class="ai-row">
-        <input class="ai-input" id="aiInput" type="text" placeholder="What's good today?" onkeydown="if(event.key==='Enter')sendAI()"/>
-        <button class="ai-send" id="aiSendBtn" onclick="sendAI()">Ask ✦</button>
+        <input class="ai-input" id="aiInput" type="text" placeholder="What's good today?"/>
+        <button class="ai-send" id="aiSendBtn">Ask ✦</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- TRACKER VIEW -->
 <div id="view-tracker" style="display:none">
   <div class="hero"><h1>Your <em>orders</em></h1><p>Track everything from brew to pickup.</p></div>
   <div class="tracker-wrap" id="trackerContent">
@@ -235,17 +204,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
   </div>
 </div>
 
-<!-- DRAWER OVERLAY -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-
-<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-head">
     <div>
       <div class="drawer-title">Your Order</div>
       <div class="drawer-sub" id="drawerSub">0 items</div>
     </div>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <button class="drawer-close" id="drawerClose">✕</button>
   </div>
   <div class="drawer-items" id="drawerItems">
     <div class="drawer-empty"><span class="drawer-empty-icon">🛒</span><p>Your cart is empty.<br/>Add something delicious!</p></div>
@@ -257,11 +223,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
       <div class="total-row big"><span>Total</span><span id="total">$0.00</span></div>
     </div>
     <input class="name-input" id="nameInput" placeholder="Your name for pickup…"/>
-    <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled>Place Order →</button>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Place Order →</button>
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-bg" id="orderModal">
   <div class="modal">
     <div class="modal-icon">🎉</div>
@@ -275,7 +240,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);mi
       <div class="step-line" id="line1"></div>
       <div class="step"><div class="step-dot" id="step2">🎁</div><div class="step-label">Ready!</div></div>
     </div>
-    <button class="modal-btn" onclick="closeModal()">Track my order →</button>
+    <button class="modal-btn" id="modalBtn">Track my order →</button>
   </div>
 </div>
 
@@ -301,27 +266,41 @@ const MENU=[
 let cart={},orders=[],currentFilter='all';
 let orderCounter=1040+Math.floor(Math.random()*10);
 
+// ── MENU ──
 function renderMenu(filter){
   currentFilter=filter;
   const items=filter==='all'?MENU:MENU.filter(i=>i.cat===filter);
-  document.getElementById('menuGrid').innerHTML=items.map((item,i)=>`
-    <div class="card" style="animation-delay:${i*.05}s">
+  const grid=document.getElementById('menuGrid');
+  grid.innerHTML=items.map((item,i)=>`
+    <div class="card" style="animation-delay:${i*.05}s" data-id="${item.id}">
       <span class="card-icon">${item.icon}</span>
       <h3>${item.name}</h3>
       <p>${item.desc}</p>
       <div class="card-bottom">
         <span class="price">$${item.price.toFixed(2)}</span>
-        <button class="add-btn ${cart[item.id]?'added':''}" onclick="addToCart(${item.id})">${cart[item.id]?'✓':'+'}</button>
+        <button class="add-btn ${cart[item.id]?'added':''}" data-id="${item.id}">${cart[item.id]?'✓':'+'}</button>
       </div>
     </div>`).join('');
+
+  // attach click events after rendering
+  grid.querySelectorAll('.add-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      addToCart(parseInt(btn.dataset.id));
+    });
+  });
 }
 
-function filterMenu(cat,btn){
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMenu(cat);
-}
+// ── FILTER BUTTONS ──
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMenu(btn.dataset.cat);
+  });
+});
 
+// ── CART ──
 function addToCart(id){
   cart[id]=(cart[id]||0)+1;
   updateCart();
@@ -343,20 +322,18 @@ function updateCart(){
   const count=ids.reduce((s,id)=>s+cart[id],0);
   const sub=ids.reduce((s,id)=>s+MENU.find(m=>m.id==id).price*cart[id],0);
   const tax=sub*.08;
-
   const badge=document.getElementById('cartBadge');
   badge.textContent=count;
   badge.classList.toggle('show',count>0);
   document.getElementById('drawerSub').textContent=count?`${count} item${count>1?'s':''}`:'0 items';
-
   if(!ids.length){
     document.getElementById('drawerItems').innerHTML='<div class="drawer-empty"><span class="drawer-empty-icon">🛒</span><p>Your cart is empty.<br/>Add something delicious!</p></div>';
     document.getElementById('drawerTotals').style.display='none';
     document.getElementById('checkoutBtn').disabled=true;
     return;
   }
-
-  document.getElementById('drawerItems').innerHTML=ids.map(id=>{
+  const drawerItems=document.getElementById('drawerItems');
+  drawerItems.innerHTML=ids.map(id=>{
     const item=MENU.find(m=>m.id==id);
     return `<div class="cart-item">
       <span class="cart-item-icon">${item.icon}</span>
@@ -365,12 +342,17 @@ function updateCart(){
         <div class="cart-item-price">$${(item.price*cart[id]).toFixed(2)}</div>
       </div>
       <div class="qty-controls">
-        <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+        <button class="qty-btn" data-id="${id}" data-delta="-1">−</button>
         <span class="qty-num">${cart[id]}</span>
-        <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+        <button class="qty-btn" data-id="${id}" data-delta="1">+</button>
       </div>
     </div>`;
   }).join('');
+
+  // attach qty button events
+  drawerItems.querySelectorAll('.qty-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>changeQty(parseInt(btn.dataset.id),parseInt(btn.dataset.delta)));
+  });
 
   document.getElementById('drawerTotals').style.display='block';
   document.getElementById('subtotal').textContent='$'+sub.toFixed(2);
@@ -383,6 +365,7 @@ document.getElementById('nameInput').addEventListener('input',()=>{
   document.getElementById('checkoutBtn').disabled=!document.getElementById('nameInput').value.trim()||!Object.keys(cart).length;
 });
 
+// ── DRAWER ──
 function openDrawer(){
   document.getElementById('drawer').classList.add('open');
   document.getElementById('drawerOverlay').classList.add('open');
@@ -393,8 +376,16 @@ function closeDrawer(){
   document.getElementById('drawerOverlay').classList.remove('open');
   document.body.style.overflow='';
 }
+document.getElementById('cartTrigger').addEventListener('click',openDrawer);
+document.getElementById('drawerClose').addEventListener('click',closeDrawer);
+document.getElementById('drawerOverlay').addEventListener('click',closeDrawer);
 
-async function checkout(){
+// ── NAV TABS ──
+document.getElementById('btnMenu').addEventListener('click',()=>showView('menu'));
+document.getElementById('btnTracker').addEventListener('click',()=>showView('tracker'));
+
+// ── CHECKOUT ──
+document.getElementById('checkoutBtn').addEventListener('click', async()=>{
   const name=document.getElementById('nameInput').value.trim();
   if(!name||!Object.keys(cart).length)return;
   const btn=document.getElementById('checkoutBtn');
@@ -423,13 +414,14 @@ async function checkout(){
     btn.disabled=false;btn.textContent='Place Order →';
     alert('Something went wrong: '+e.message);
   }
-}
+});
 
+// ── MODAL ──
 function openModal(order){
   document.getElementById('orderModal').classList.add('open');
   [0,1,2].forEach(i=>{document.getElementById('step'+i).className='step-dot';if(i>0)document.getElementById('line'+(i-1)).className='step-line';});
   document.getElementById('step0').classList.add('done');
-  const advance=async(s,act,done,lines,delay)=>setTimeout(async()=>{
+  const advance=(s,act,done,lines,delay)=>setTimeout(async()=>{
     if(done!=null)document.getElementById('step'+done).className='step-dot done';
     if(act!=null)document.getElementById('step'+act).classList.add('active');
     lines.forEach(l=>document.getElementById('line'+l).className='step-line done');
@@ -448,8 +440,13 @@ function openModal(order){
   },9000);
 }
 
-function closeModal(){document.getElementById('orderModal').classList.remove('open');showView('tracker');}
+function closeModal(){
+  document.getElementById('orderModal').classList.remove('open');
+  showView('tracker');
+}
+document.getElementById('modalBtn').addEventListener('click',closeModal);
 
+// ── TRACKER ──
 function renderTracker(){
   const el=document.getElementById('trackerContent');
   if(!orders.length){el.innerHTML='<div class="tracker-empty"><div class="tracker-empty-icon">🧾</div><p>No orders yet — go grab something!</p></div>';return;}
@@ -466,13 +463,16 @@ function renderTracker(){
   </div>`).join('');
 }
 
+// ── VIEWS ──
 function showView(v){
   document.getElementById('view-menu').style.display=v==='menu'?'block':'none';
   document.getElementById('view-tracker').style.display=v==='tracker'?'block':'none';
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(v==='menu'?0:1)));
+  document.getElementById('btnMenu').classList.toggle('active',v==='menu');
+  document.getElementById('btnTracker').classList.toggle('active',v==='tracker');
   if(v==='tracker')renderTracker();
 }
 
+// ── AI ──
 const MENU_CONTEXT=MENU.map(m=>`- ${m.name} ($${m.price.toFixed(2)}): ${m.desc}`).join('\n');
 const SYS=`You are a warm, witty barista at KaffineBreak, a cozy coffee shop. Help customers choose what to order. Keep replies to 2-4 sentences, conversational, no bullet points. Menu:\n\n${MENU_CONTEXT}\n\nUse exact menu names. Be fun and personable.`;
 let aiHistory=[];
@@ -505,6 +505,9 @@ function addAIMsg(text,cls){
   el.className='ai-msg '+cls;el.textContent=text;
   msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;
 }
+
+document.getElementById('aiSendBtn').addEventListener('click',sendAI);
+document.getElementById('aiInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendAI();});
 
 renderMenu('all');
 </script>
