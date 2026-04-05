@@ -311,8 +311,6 @@ function renderMenu(filter){
   const items=filter==='all'?MENU:MENU.filter(i=>i.cat===filter);
   document.getElementById('menuGrid').innerHTML=items.map((item,i)=>`
     <div class="card" style="animation-delay:${i*.05}s">
-      ${item.badge==='new'?'<span class="badge badge-new">New</span>':''}
-      ${item.badge==='hot'?'<span class="badge badge-hot">Popular</span>':''}
       <span class="card-icon">${item.icon}</span>
       <h3>${item.name}</h3>
       <p>${item.desc}</p>
